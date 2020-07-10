@@ -14,7 +14,6 @@ no_input_flags = [
     '--noAP',
     '--no11ax',
     '--no11r',
-    '--clean',
     '--oui_update',
     '--version',
     '-V',
@@ -39,7 +38,7 @@ def test_menu_file(tmp_path):
         output.wait()
     print(f.read_text())
     assert 'Status' in f.read_text(), '"Status" not in file contents'
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
 
 
 def test_files_root(tmp_path):
@@ -52,7 +51,7 @@ def test_files_root(tmp_path):
         output.wait()
     files = [path.name for path in pathlib.Path(tmp_path).rglob('*.*')]
     assert files, "Files not found"
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
 
 
 def test_pcap_file():
@@ -63,7 +62,7 @@ def test_pcap_file():
     except subprocess.TimeoutExpired:
         output.send_signal(signal.SIGINT)
         output.wait()
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
 
 
 @pytest.fixture()
@@ -84,7 +83,7 @@ def test_no_prep(setup_interface):
     except subprocess.TimeoutExpired:
         output.send_signal(signal.SIGINT)
         output.wait()
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
 
 
 def test_config_input():
@@ -95,7 +94,19 @@ def test_config_input():
     except subprocess.TimeoutExpired:
         output.send_signal(signal.SIGINT)
         output.wait()
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
+
+
+def test_clean_input():
+    """Please don't judge me for this...."""
+    ugly = '( sleep 20; echo "y\n" ) | sudo profiler --clean'
+    output = subprocess.Popen(ugly, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    try:
+        output.wait(22)
+    except subprocess.TimeoutExpired:
+        output.send_signal(signal.SIGINT)
+        output.wait()
+    assert output.returncode == 0, "Program did not exit cleanly"
 
 
 @pytest.mark.parametrize('flag', no_input_flags)
@@ -106,7 +117,7 @@ def test_cli_no_args(flag):
     except subprocess.TimeoutExpired:
         output.send_signal(signal.SIGINT)
         output.wait()
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly with {flag}"
 
 
 def test_channel_flag():
@@ -116,7 +127,7 @@ def test_channel_flag():
     except subprocess.TimeoutExpired:
         output.send_signal(signal.SIGINT)
         output.wait()
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
 
 
 def test_ssid_flag():
@@ -126,7 +137,7 @@ def test_ssid_flag():
     except subprocess.TimeoutExpired:
         output.send_signal(signal.SIGINT)
         output.wait()
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
 
 
 @pytest.mark.parametrize('debug', debug_types)
@@ -137,7 +148,7 @@ def test_logging_flag(debug):
     except subprocess.TimeoutExpired:
         output.send_signal(signal.SIGINT)
         output.wait()
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
 
 
 def test_interface_flag():
@@ -147,4 +158,4 @@ def test_interface_flag():
     except subprocess.TimeoutExpired:
         output.send_signal(signal.SIGINT)
         output.wait()
-    assert output.returncode == 0, "Program did not exit cleanly with no args"
+    assert output.returncode == 0, "Program did not exit cleanly"
