@@ -26,11 +26,16 @@ no_input_flags = [
 debug_types = ['debug', 'warning']
 
 
-def test_menu_file(tmp_path):
+@pytest.fixture(scope='module')
+def load_pcap():
+    pcap = pathlib.Path(__file__).parent / 'pcaps' / 'iPhone11ProMax.pcap_randomized.pcap'
+    return(pcap)
+
+
+def test_menu_file(tmp_path, load_pcap):
     f = tmp_path / "dummy.txt"
     f.write_text('')
-    pcap = pathlib.Path('./tests/pcaps/iPhone11ProMax.pcap_randomized.pcap')
-    output = subprocess.Popen([insertion, '--pcap', pcap, '--menu_file', f], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output = subprocess.Popen([insertion, '--pcap', load_pcap, '--menu_file', f], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         output.wait(15)
     except subprocess.TimeoutExpired:
@@ -41,9 +46,8 @@ def test_menu_file(tmp_path):
     assert output.returncode == 0, "Program did not exit cleanly"
 
 
-def test_files_root(tmp_path):
-    pcap = pathlib.Path('./tests/pcaps/iPhone11ProMax.pcap_randomized.pcap')
-    output = subprocess.Popen([insertion, '--pcap', pcap, '--files_root', tmp_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+def test_files_root(tmp_path, load_pcap):
+    output = subprocess.Popen([insertion, '--pcap', load_pcap, '--files_root', tmp_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         output.wait(15)
     except subprocess.TimeoutExpired:
@@ -54,9 +58,8 @@ def test_files_root(tmp_path):
     assert output.returncode == 0, "Program did not exit cleanly"
 
 
-def test_pcap_file():
-    pcap = pathlib.Path('./tests/pcaps/iPhone11ProMax.pcap_randomized.pcap')
-    output = subprocess.Popen([insertion, '--pcap', pcap], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+def test_pcap_file(load_pcap):
+    output = subprocess.Popen([insertion, '--pcap', load_pcap], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         output.wait(15)
     except subprocess.TimeoutExpired:
