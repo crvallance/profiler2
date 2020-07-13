@@ -7,7 +7,7 @@ import pathlib
 from profiler2 import helpers
 import sys
 
-insertion = '/usr/local/bin/profiler'
+insertion = 'profiler'
 
 no_input_flags = [
     '--hostname_ssid',
