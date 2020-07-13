@@ -20,11 +20,7 @@ except FileNotFoundError:
 
 packages = ["profiler2"]
 
-requires = ["scapy==2.4.3", "manuf==1.1.1"]
-
-extras_require={
-        'dev': [ "pytest==5.4.3", "tox==3.15.2"]
-    }
+requires = ["scapy==2.4.3", "manuf==1.1.1", "pytest==5.4.3", "tox==3.15.2"]
 
 setup(
     name=about["__title__"],
