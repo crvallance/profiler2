@@ -90,7 +90,7 @@ def test_no_prep(setup_interface):
 
 
 def test_config_input():
-    config_ini = pathlib.Path('./profiler2/config.ini')
+    config_ini = pathlib.Path(__file__).parent / '..' / 'profiler2' / 'config.ini'
     output = subprocess.Popen([insertion, '--config', config_ini], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         output.wait(15)
